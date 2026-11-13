@@ -1,0 +1,6 @@
+fastapi[standard]
+python-multipart
+Pillow
+boto3
+numpy
+opencv-python-headless
