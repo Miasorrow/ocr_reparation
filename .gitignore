@@ -18,3 +18,14 @@ htmlcov/
 var/
 *.code-workspace
 .DS_Store
+
+# Images locales et exports potentiellement sensibles
+images/
+uploads/
+exports/
+*.csv
+!examples/*.csv
+*.sqlite-wal
+*.sqlite-shm
+*.db-wal
+*.db-shm

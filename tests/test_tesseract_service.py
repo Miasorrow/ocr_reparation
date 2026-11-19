@@ -35,6 +35,33 @@ class TesseractTests(unittest.TestCase):
         self.assertFalse(paths[0].exists())
 
     @patch("services.tesseract_service.subprocess.run")
+    def test_orientation_detection_and_fallback(self, run):
+        buf = io.BytesIO()
+        Image.new("RGB", (40, 20), "white").save(buf, format="PNG")
+        sizes = []
+        def recognize(command, **kwargs):
+            if command[-1] == "0":
+                return SimpleNamespace(returncode=0, stdout="Rotate: 90\nOrientation confidence: 4.30\n")
+            with Image.open(command[1]) as image:
+                sizes.append(image.size)
+            return SimpleNamespace(returncode=0, stdout="texte fictif")
+        run.side_effect = recognize
+        result = extract_text(buf.getvalue(), auto_rotate=True)
+        self.assertEqual(result['rotation_degrees'], 90)
+        self.assertEqual(sizes[-1], (20, 40))
+        sizes.clear()
+        result = extract_text(buf.getvalue(), auto_rotate=True, orientation_confidence=5)
+        self.assertEqual(result['rotation_degrees'], 0)
+        self.assertEqual(sizes[-1], (40, 20))
+
+    @patch("services.tesseract_service.subprocess.run")
+    def test_orientation_missing_data_preserves_image(self, run):
+        run.side_effect = [SimpleNamespace(returncode=1, stdout=""), SimpleNamespace(returncode=0, stdout="texte fictif")]
+        result = extract_text(image_bytes(), auto_rotate=True)
+        self.assertEqual(result['rotation_degrees'], 0)
+        self.assertEqual(result['text'], 'texte fictif')
+
+    @patch("services.tesseract_service.subprocess.run")
     def test_invalid_inputs_do_not_start_engine(self, run):
         for data, status in [
             (b"not an image", 422),

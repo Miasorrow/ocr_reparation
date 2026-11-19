@@ -1,78 +1,22 @@
-TOOL_CONFIG = {
-    "tools": [
-        {
-            "toolSpec": {
-                "name": "extract_carte_grise",
-                "description": "Extraction d'une carte grise francaise",
-                "inputSchema": {
-                    "json": {
-                        "type": "object",
-                        "properties": {
-                            "is_carte_grise": {
-                                "type": "boolean"
-                            },
-                            "confidence": {
-                                "type": "number"
-                            },
-                            "document_type": {
-                                "type": "string"
-                            },
-                            "plate": {
-                                "type": "object",
-                                "properties": {
-                                    "value": {
-                                        "type": "string"
-                                    },
-                                    "format": {
-                                        "type": "string"
-                                    },
-                                    "valid": {
-                                        "type": "boolean"
-                                    }
-                                }
-                            },
-                            "formula_number": {
-                                "type": "object",
-                                "properties": {
-                                    "value": {
-                                        "type": "string"
-                                    },
-                                    "edition_year": {
-                                        "type": "integer"
-                                    }
-                                }
-                            },
-                            "driver_license": {
-                                "type": "string"
-                            },
-                            "fields": {
-                                "type": "object"
-                            },
-                            "missing_fields": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "required": [
-                            "is_carte_grise",
-                            "confidence",
-                            "document_type",
-                            "plate",
-                            "formula_number",
-                            "driver_license",
-                            "fields",
-                            "missing_fields"
-                        ]
-                    }
-                }
-            }
-        }
-    ],
-    "toolChoice": {
-        "tool": {
-            "name": "extract_carte_grise"
-        }
-    }
-}
+CARTE_GRISE_SCHEMA = {'type': 'object',
+ 'properties': {'is_carte_grise': {'type': 'boolean'},
+                'confidence': {'type': 'number'},
+                'document_type': {'type': 'string'},
+                'plate': {'type': 'object',
+                          'properties': {'value': {'type': 'string'},
+                                         'format': {'type': 'string'},
+                                         'valid': {'type': 'boolean'}}},
+                'formula_number': {'type': 'object',
+                                   'properties': {'value': {'type': 'string'},
+                                                  'edition_year': {'type': 'integer'}}},
+                'driver_license': {'type': 'string'},
+                'fields': {'type': 'object'},
+                'missing_fields': {'type': 'array', 'items': {'type': 'string'}}},
+ 'required': ['is_carte_grise',
+              'confidence',
+              'document_type',
+              'plate',
+              'formula_number',
+              'driver_license',
+              'fields',
+              'missing_fields']}
